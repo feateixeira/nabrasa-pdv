@@ -1,0 +1,598 @@
+/* Importações e Resets */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Roboto", Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: url("assets/194.jpg");
+    backdrop-filter: blur(5px);
+}
+
+header {
+    background-color: #c9b977;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo img {
+    height: 60px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+/* Layout principal */
+.main-container {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Seção de menu (esquerda) */
+.menu-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.menu-section {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.menu-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.btn {
+    background-color: #ff8c42;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: #e67e22;
+}
+
+/* Seção de resumo do pedido (direita) */
+.order-summary-container {
+    flex: 1;
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.order-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-control {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Modais */
+.modal {
+    display: none;
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modal.active {
+    display: block;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.modal-body {
+    padding: 10px 0;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.selected-sauces, .additional-items-list {
+    margin-top: 10px;
+}
+
+#printableOrder {
+    display: none;
+}
+
+/* Estilo para os botões de bebidas dentro do modal */
+#drinksModalBody {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    padding: 10px;
+}
+
+#drinksModalBody .btn {
+    padding: 8px;
+    font-size: 14px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.2;
+}
+
+/* Estilo para indicador de entrega */
+.delivery-added {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.delivery-added::before {
+    content: "✓";
+    font-weight: bold;
+}
+
+#addChargeButton:disabled {
+    background-color: #28a745;
+    cursor: not-allowed;
+}
+
+/* Botões de ação */
+.btn-action {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-action:hover {
+    background-color: #218838;
+}
+
+#orderList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#orderList li {
+    margin-bottom: 5px;
+}
+
+.order-item-container {
+    background-color: #f8f9fa;
+    padding: 8px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.order-item-container button {
+    min-width: 30px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #c9b977;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.order-item-container button:hover {
+    background-color: #ecdda2;
+}
+
+/* Estilo para os botões de molhos e itens extras selecionados */
+#sauceOptions .btn.active,
+.additional-items-list .btn.active,
+.menu-buttons .btn.selected {
+    background-color: #28a745;
+    color: white;
+    border: 2px solid #218838;
+}
+
+/* Estilo para botões de itens extras selecionados */
+.btn.btn-orange.active {
+    background-color: #ff8c42;
+    border-color: #ff8c42;
+    color: white;
+}
+
+/* Estilo para a lista de itens extras selecionados */
+.selected-extra-item {
+    margin: 5px 0;
+    padding: 5px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Espaçamento entre os botões de itens extras */
+.additional-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.additional-items .btn {
+    margin-bottom: 5px;
+}
+
+.modal-item {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content-one {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.modal-content-one h2 {
+    margin-bottom: 25px;
+    font-size: 28px;
+    color: #333;
+}
+
+.modal-content-one p {
+    margin-bottom: 25px;
+    font-size: 18px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.modal-buttons button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-buttons button.cancel {
+    background-color: #ccc;
+    color: #333;
+}
+
+.modal-buttons button.cancel:hover {
+    background-color: #bbb;
+}
+
+.modal-buttons button.download {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.modal-buttons button.download:hover {
+    background-color: #218838;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.login-container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-logo img {
+    max-width: 150px;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.login-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #ff6b00;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-container button:hover {
+    background-color: #e65c00;
+}
+
+.main-content {
+    display: none;
+}
+
+/* Estilos para o resumo do pedido */
+.order-summary {
+    font-size: 0.9rem;
+    padding: 10px;
+}
+
+.order-summary h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.order-item-container {
+    font-size: 0.85rem;
+    padding: 4px 0;
+    margin-bottom: 4px !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.order-item-text {
+    flex: 1;
+    padding-right: 8px;
+    word-break: break-word;
+}
+
+.order-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    white-space: nowrap;
+    margin-left: auto;
+}
+
+.order-item-controls button {
+    font-size: 0.8rem;
+    padding: 2px 6px !important;
+    min-width: 24px;
+    height: 24px;
+    line-height: 1;
+    margin: 0 2px;
+}
+
+#orderList {
+    max-height: 40vh;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding-right: 5px;
+}
+
+#orderList li {
+    margin-bottom: 4px;
+}
+
+.form-group {
+    margin-bottom: 8px;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+}
+
+.form-control {
+    font-size: 0.85rem;
+    padding: 4px 8px;
+}
+
+.btn-action {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+}
+
+.delivery-added {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 4px 0;
+}
+
+/* Estilo para a barra de rolagem */
+#orderList::-webkit-scrollbar {
+    width: 6px;
+}
+
+#orderList::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#orderList::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+#orderList::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column; /* Coluna em telas menores */
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .order-summary-container {
+        position: static; /* Remove o sticky em telas menores */
+        max-height: none; /* Remove a altura máxima */
+    }
+
+    .menu-buttons {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Botões menores */
+    }
+
+    .modal-content-one {
+        margin: 20% auto; /* Ajusta a margem para telas menores */
+        padding: 20px;
+    }
+
+    .modal-content-one h2 {
+        font-size: 24px; /* Reduz o tamanho da fonte */
+    }
+
+    .modal-content-one p {
+        font-size: 16px; /* Reduz o tamanho da fonte */
+    }
+
+    .modal-buttons {
+        flex-direction: column; /* Botões em coluna em telas menores */
+        gap: 10px;
+    }
+
+    .modal-buttons button {
+        width: 100%; /* Botões ocupam toda a largura */
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-buttons {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Botões ainda menores */
+    }
+
+    .modal-content-one {
+        margin: 10% auto; /* Ajusta a margem para telas muito pequenas */
+        padding: 15px;
+    }
+
+    .modal-content-one h2 {
+        font-size: 20px; /* Reduz o tamanho da fonte */
+    }
+
+    .modal-content-one p {
+        font-size: 14px; /* Reduz o tamanho da fonte */
+    }
+}
+
+/* Garantir que o SweetAlert2 apareça por cima do overlay de login */
+.swal2-container {
+    z-index: 2000 !important;
+}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Pedidos Na Brasa</title>
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./print.css" media="print">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/Brasa.png">
+</head>
+<body>
+    <script src="users.js"></script>
+    
+    <!-- Overlay de Login -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-container">
+            <div class="login-logo">
+                <img src="assets/Brasa.png" alt="Logo Na Brasa">
+            </div>
+            <form id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Usuário:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div id="mainContent" class="main-content">
+        <header>
+            <div class="logo">
+                <img src="assets/Brasa.png" alt="Logo">
+            </div>
+            <nav>
+                <a href="estoque.html">Estoque</a>
+                <a href="#" onclick="openOrdersModal()">Fechamento de Caixa</a>
+                <a href="#" onclick="logout()" style="margin-left: 20px;">Sair</a>
+            </nav>
+        </header>
+
+        <div class="main-container">
+            <!-- Seção de Menu (Esquerda) -->
+            <div class="menu-container">
+                <!-- Hambúrgueres -->
+                <div class="menu-section">
+                    <h3>Hambúrgueres:</h3>
+                    <div class="menu-buttons">
+                        <!-- Botões dos hambúrgueres -->
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Simples', 14, this)">Na brasa Simples - R$14,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Duplo', 22, this)">Na brasa Duplo - R$22,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Triplo', 28, this)">Na brasa Triplo - R$28,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Simples Especial', 20, this)">Hambúrguer Simples ESPECIAL - R$20,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Duplo Especial', 27, this)">Hambúrguer Duplo ESPECIAL - R$27,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Triplo Especial', 32, this)">Hambúrguer Triplo ESPECIAL - R$32,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Simples SUPREMO', 20, this)">Hambúrguer Simples SUPREMO - R$20,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Duplo Supremo', 27, this)">Hambúrguer Duplo SUPREMO - R$27,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Triplo SUPREMO', 32, this)">Hambúrguer Triplo SUPREMO - R$32,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Suino', 25, this)">Hambúrguer Na Brasa Suino - R$25,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Frango Simples', 20, this)">Hambúrguer Frango Simples - R$20,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Frango Duplo', 27, this)">Hambúrguer Frango Duplo - R$27,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Frango Triplo', 32, this)">Hambúrguer Frango Triplo - R$32,00</button>
+                        <!-- Hambúrgueres que não acionam o modal -->
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Nuttela', 16, this)">Hambúrguer Nuttela + Morango - R$16,00</button>
+                        
+                    </div>
+                </div>
+        
+                <!-- Batatas -->
+                
+                    <div class="menu-section">
+                        <h3>Batatas:</h3>
+                        <div class="menu-buttons">
+                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Frita(COMBO)', 5)">Batata Combo - R$5,00</button>
+                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Frita Pequena', 8)">Batata Pequena - R$8,00</button>
+                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Média', 15)">Batata Média - R$15,00</button>
+                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Média Recheada', 20)">Batata Média Recheada - R$20,00</button>
+                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Grande', 20)">Batata Grande - R$20,00</button>
+                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Grande Recheada', 28)">Batata Grande Recheada - R$28,00</button>
+                        </div>
+                    </div>
+              
+        
+                <!-- Bebidas -->
+                <div class="menu-section">
+                    <h3>Bebidas:</h3>
+                    <div class="menu-buttons">
+                        <button class="btn btn-orange" onclick="openDrinksModal('lata')">Lata</button>
+                        <button class="btn btn-orange"onclick="openDrinksModal('600ml')">600ml</button>
+                        <button class="btn btn-orange" onclick="openDrinksModal('1lt')">1lt</button>
+                        <button class="btn btn-orange" onclick="openDrinksModal('2l')">2l</button>
+                        <button class="btn btn-orange" onclick="openDrinksModal('agua')">Água</button>
+                    </div>
+                </div>
+
+                <!-- Frango no Pote -->
+                <div class="menu-section">
+                    <h3>Frango no Pote:</h3>
+                    <div class="menu-buttons">
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Frango no Pote P', 20, this)">Frango no Pote P - R$20,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Frango no Pote M', 37, this)">Frango no Pote M - R$37,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Frango no Pote G', 50, this)">Frango no Pote G - R$50,00</button>
+                    </div>
+                </div>
+            </div>
+        
+                        <!-- Seção de Modais (Meio) -->
+            <div class="modal-section">
+                <!-- Modal de Molhos -->
+                <div id="sauceModal" class="modal">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Seleção de Molhos:</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="sauceOptions" class="d-flex flex-wrap">
+                            <button class="btn btn-orange m-1" onclick="toggleSauceSelection(this, 'Bacon')">Bacon</button>
+                            <button class="btn btn-orange m-1" onclick="toggleSauceSelection(this, 'Mostarda&Mel')">Mostarda&Mel</button>
+                            <button class="btn btn-orange m-1" onclick="toggleSauceSelection(this, 'Alho')">Alho</button>
+                            <button class="btn btn-orange m-1" onclick="toggleSauceSelection(this, 'Ervas')">Ervas</button>
+                            <button class="btn btn-orange m-1" onclick="toggleSauceSelection(this, 'Sem Molho')">Sem Molho</button>
+                        </div>
+                        <div class="additional-items">
+                            <h5>Adicionais:</h5>
+                            <button class="btn btn-orange m-1" onclick="addAdditionalItem(this, 'Carne Extra', 8)">Carne Extra - R$8,00</button>
+                            <button class="btn btn-orange m-1" onclick="addAdditionalItem(this, 'Carne Suina Extra', 8)">Carne Suina Extra - R$8,00</button>
+                            <button class="btn btn-orange m-1" onclick="addAdditionalItem(this, 'Cheddar Extra', 1.5)">Cheddar Extra - R$1,50</button>
+                            <button class="btn btn-orange m-1" onclick="addAdditionalItem(this, 'Bacon Extra', 3.5)">Bacon Extra - R$3,50</button>
+                            <button class="btn btn-orange m-1" onclick="addAdditionalItem(this, 'Cebola Roxa', 3)">Cebola Roxa - R$3,00</button>
+                            <button class="btn btn-orange m-1" onclick="addAdditionalItem(this, 'Cebola Caramelizada', 3)">Cebola Caramelizada - R$3,00</button>
+                            <div class="additional-items-list .btn.active" ></div>
+                        </div>
+                    </div>
+                    <!-- Campo de observação -->
+                    <div class="form-group mt-3">
+                        <label for="burgerObs">Observações:</label>
+                        <input type="text" id="burgerObs" class="form-control" placeholder="Ex.: sem alface, sem cheddar">
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Botão para limpar a seleção -->
+                        <button class="btn btn-red" onclick="clearSelection()">Limpar Seleção</button>
+                        <button type="button" class="btn btn-primary" onclick="confirmSauceSelection()">Adicionar ao Pedido</button>
+                    </div>
+                </div>
+            
+                <!-- Modal de Bebidas -->
+                <div id="drinksModal" class="modal">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Selecione a Bebida:</h5>
+                    </div>
+                    <div class="modal-body" id="drinksModalBody">
+                        <!-- As opções de bebidas serão carregadas aqui dinamicamente -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="cancelAction()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Seção de Resumo do Pedido (Direita) -->
+            <div class="order-summary-container">
+                <div class="order-summary">
+                    <h3>Resumo do Pedido</h3>
+                    <ul id="orderList" class="list-unstyled"></ul>
+                    <p id="orderTotal">Total: R$0,00</p>
+                    <div class="form-group">
+                        <label for="address">Nome/End.:</label>
+                        <input type="text" id="address" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="complement">Complemento:</label>
+                        <input type="text" id="complement" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="obs">Obs:</label>
+                        <input type="text" id="obs" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="payment">Forma de Pagamento:</label>
+                        <select id="paymentMethod" class="form-control">
+                            <option value="Pix">Pix</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Crédito">Cartão de Crédito</option>
+                            <option value="Débito">Cartão de Débito</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="paymentObservations" class="form-control" placeholder="Ex: R$ 50 em espécie e R$ 50 no crédito"></textarea>
+                    </div>
+                    <button class="btn btn-action mt-3" onclick="printOrder()">Imprimir Pedido</button>
+                    <button id="addChargeButton" class="btn btn-action mt-3" onclick="addExtraCharge()">Adicionar Entrega</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="estoque.js"></script>
+    <script src="main.js"></script>
+    <script>
+        // Verificar autenticação ao carregar a página
+        function checkAuth() {
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            const loginOverlay = document.getElementById('loginOverlay');
+            const mainContent = document.getElementById('mainContent');
+
+            if (currentUser) {
+                loginOverlay.style.display = 'none';
+                mainContent.style.display = 'block';
+                
+                // Mostra a navegação para todos
+                const navLinks = document.querySelector('nav');
+                if (navLinks) {
+                    navLinks.style.display = 'flex';
+                    
+                    // Esconde o botão de fechamento de caixa para não-admins
+                    const fechamentoCaixaBtn = document.querySelector('a[onclick="openOrdersModal()"]');
+                    if (fechamentoCaixaBtn) {
+                        fechamentoCaixaBtn.style.display = isAdmin(currentUser) ? 'inline-block' : 'none';
+                    }
+                }
+            } else {
+                loginOverlay.style.display = 'flex';
+                mainContent.style.display = 'none';
+            }
+        }
+
+        // Função de login
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const user = authenticateUser(username, password);
+            
+            if (user) {
+                sessionStorage.setItem('currentUser', JSON.stringify(user));
+                checkAuth();
+                // Limpar campos do formulário
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: 'Usuário ou senha incorretos!'
+                });
+            }
+            return false;
+        }
+
+        // Função de logout
+        function logout() {
+            sessionStorage.removeItem('currentUser');
+            checkAuth();
+        }
+
+        // Verificar autenticação ao carregar a página
+        window.addEventListener('DOMContentLoaded', checkAuth);
+    </script>
+    <div id="printableOrder" style="display: none;"></div>
+</body>
+</html>
