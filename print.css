@@ -1,4 +1,3 @@
-
 body * {
 visibility: hidden;
 }
@@ -78,6 +77,12 @@ visibility: visible;
 #printableOrder .img-nabrasa {
     text-align: center;
     margin-top: 5mm;
+}
+
+#printableOrder .img-nabrasa img {
+    width: 50mm; /* Ajusta a largura da logo para 60mm */
+    height: auto; /* Mantém a proporção da imagem */
+    max-width: 100%; /* Garante que não ultrapasse a largura do pedido */
 }
 
     /* Remove os botões de controle de quantidade */
