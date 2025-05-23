@@ -552,7 +552,7 @@ function printOrder() {
     updateEstoqueAfterSale(orderItems);
 
     // Gera o conteúdo para impressão
-    const img = "<img src='./assets/logobg.png'>";
+    const img = "<img src='./assets/Brasa.png'>";
     const complementText = complement ? `(${complement})` : '';
     const paymentObservationsText = paymentObservations ? `${paymentObservations}` : '';
 
