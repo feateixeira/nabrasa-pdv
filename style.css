@@ -16,33 +16,37 @@ body {
     min-height: 100vh;
     background-image: url("assets/194.jpg");
     backdrop-filter: blur(5px);
+    overflow-x: hidden;
 }
 
 header {
     background-color: #c9b977;
     color: white;
-    padding: 10px 20px;
+    padding: 5px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 50px;
 }
 
 header .logo img {
-    height: 60px;
+    height: 40px;
 }
 
 nav a {
     color: white;
     text-decoration: none;
-    margin-left: 20px;
+    margin-left: 15px;
+    font-size: 14px;
 }
 
 /* Layout principal */
 .main-container {
     display: flex;
     flex: 1;
-    padding: 20px;
-    gap: 20px;
+    padding: 10px;
+    gap: 10px;
+    height: calc(100vh - 50px);
 }
 
 /* Seção de menu (esquerda) */
@@ -50,31 +54,33 @@ nav a {
     flex: 2;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
     overflow-y: auto;
+    height: 100%;
 }
 
 .menu-section {
     background-color: white;
-    padding: 15px;
+    padding: 10px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .menu-buttons {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 8px;
 }
 
 .btn {
     background-color: #ff8c42;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 8px;
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
+    font-size: 13px;
 }
 
 .btn:hover {
@@ -85,41 +91,44 @@ nav a {
 .order-summary-container {
     flex: 1;
     background-color: white;
-    padding: 15px;
+    padding: 10px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: sticky;
-    top: 20px;
-    height: fit-content;
-    max-height: 80vh;
+    top: 10px;
+    height: calc(100vh - 70px);
     overflow-y: auto;
 }
 
 .order-summary {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
+    margin-bottom: 8px;
 }
 
 .form-control {
-    padding: 8px;
+    padding: 6px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    font-size: 13px;
 }
 
 /* Modais */
 .modal {
     display: none;
     background-color: white;
-    padding: 15px;
+    padding: 10px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .modal.active {
@@ -131,19 +140,21 @@ nav a {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
 }
 
 .modal-body {
-    padding: 10px 0;
+    padding: 8px 0;
 }
 
 .modal-footer {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    padding-top: 10px;
+    gap: 8px;
+    padding-top: 8px;
     border-top: 1px solid #ccc;
+    margin-top: 8px;
 }
 
 .selected-sauces, .additional-items-list {
@@ -151,21 +162,22 @@ nav a {
 }
 
 #printableOrder {
-    display: none;
+    padding: 10px;
+    font-size: 13px;
 }
 
 /* Estilo para os botões de bebidas dentro do modal */
 #drinksModalBody {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 8px;
-    padding: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 6px;
+    padding: 8px;
 }
 
 #drinksModalBody .btn {
-    padding: 8px;
-    font-size: 14px;
-    min-height: 40px;
+    padding: 6px;
+    font-size: 12px;
+    min-height: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -176,14 +188,9 @@ nav a {
 
 /* Estilo para indicador de entrega */
 .delivery-added {
-    background-color: #28a745;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    padding: 4px 8px;
+    font-size: 13px;
+    margin-top: 8px;
 }
 
 .delivery-added::before {
@@ -198,45 +205,32 @@ nav a {
 
 /* Botões de ação */
 .btn-action {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-}
-
-.btn-action:hover {
-    background-color: #218838;
+    padding: 8px;
+    font-size: 13px;
 }
 
 #orderList {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
 }
 
 #orderList li {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .order-item-container {
     background-color: #f8f9fa;
-    padding: 8px;
+    padding: 6px;
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 4px;
 }
 
 .order-item-container button {
-    min-width: 30px;
-    height: 30px;
+    min-width: 25px;
+    height: 25px;
     padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 16px;
     background-color: #c9b977;
     border: none;
     border-radius: 4px;
@@ -285,27 +279,15 @@ nav a {
 }
 
 .modal-item {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
+    max-width: 90%;
+    max-height: 90vh;
+    margin: 20px auto;
 }
 
 .modal-content-one {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 30px;
-    border: 1px solid #ddd;
-    width: 90%;
-    max-width: 600px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
+    padding: 15px;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .modal-content-one h2 {
@@ -397,10 +379,6 @@ nav a {
     max-width: 150px;
 }
 
-.form-group {
-    margin-bottom: 1rem;
-}
-
 .login-container label {
     display: block;
     margin-bottom: 0.5rem;
@@ -446,73 +424,21 @@ nav a {
     margin-bottom: 10px;
 }
 
-.order-item-container {
-    font-size: 0.85rem;
-    padding: 4px 0;
-    margin-bottom: 4px !important;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-}
-
 .order-item-text {
-    flex: 1;
-    padding-right: 8px;
-    word-break: break-word;
+    font-size: 13px;
+    margin-bottom: 4px;
 }
 
 .order-item-controls {
     display: flex;
-    align-items: center;
-    gap: 2px;
-    white-space: nowrap;
-    margin-left: auto;
+    gap: 4px;
 }
 
 .order-item-controls button {
-    font-size: 0.8rem;
-    padding: 2px 6px !important;
-    min-width: 24px;
-    height: 24px;
-    line-height: 1;
-    margin: 0 2px;
-}
-
-#orderList {
-    max-height: 40vh;
-    overflow-y: auto;
-    margin-bottom: 10px;
-    padding-right: 5px;
-}
-
-#orderList li {
-    margin-bottom: 4px;
-}
-
-.form-group {
-    margin-bottom: 8px;
-}
-
-.form-group label {
-    font-size: 0.85rem;
-    margin-bottom: 2px;
-}
-
-.form-control {
-    font-size: 0.85rem;
-    padding: 4px 8px;
-}
-
-.btn-action {
-    font-size: 0.9rem;
-    padding: 6px 12px;
-}
-
-.delivery-added {
-    font-size: 0.85rem;
-    color: #666;
-    margin: 4px 0;
+    min-width: 25px;
+    height: 25px;
+    padding: 0;
+    font-size: 16px;
 }
 
 /* Estilo para a barra de rolagem */
@@ -534,42 +460,30 @@ nav a {
 }
 
 /* Media Queries para Responsividade */
+@media (max-width: 1366px) {
+    .menu-buttons {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+    
+    .btn {
+        font-size: 12px;
+        padding: 6px;
+    }
+    
+    .order-summary-container {
+        width: 300px;
+    }
+}
+
 @media (max-width: 768px) {
     .main-container {
-        flex-direction: column; /* Coluna em telas menores */
-        padding: 10px;
-        gap: 10px;
+        flex-direction: column;
     }
-
+    
     .order-summary-container {
-        position: static; /* Remove o sticky em telas menores */
-        max-height: none; /* Remove a altura máxima */
-    }
-
-    .menu-buttons {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Botões menores */
-    }
-
-    .modal-content-one {
-        margin: 20% auto; /* Ajusta a margem para telas menores */
-        padding: 20px;
-    }
-
-    .modal-content-one h2 {
-        font-size: 24px; /* Reduz o tamanho da fonte */
-    }
-
-    .modal-content-one p {
-        font-size: 16px; /* Reduz o tamanho da fonte */
-    }
-
-    .modal-buttons {
-        flex-direction: column; /* Botões em coluna em telas menores */
-        gap: 10px;
-    }
-
-    .modal-buttons button {
-        width: 100%; /* Botões ocupam toda a largura */
+        width: 100%;
+        position: relative;
+        top: 0;
     }
 }
 
