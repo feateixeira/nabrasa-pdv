@@ -34,6 +34,22 @@ const drinks = {
     agua: [
         { name: 'Água com gás', price: 4 },
         { name: 'Água sem gás', price: 2.5 }
+    ],
+    suco: [
+        { name: 'Maracujá 300ml', price: 7 },
+        { name: 'Acerola 300ml', price: 7 },
+        { name: 'Abacaxi c/ Hortelã 300ml', price: 7 },
+        { name: 'Morango 300ml', price: 7 },
+        { name: 'Maracujá 500ml', price: 10 },
+        { name: 'Acerola 500ml', price: 10 },
+        { name: 'Abacaxi c/ Hortelã 500ml', price: 10 },
+        { name: 'Morango 500ml', price: 10 }
+    ],
+    creme: [
+        { name: 'Maracujá 300ml', price: 8 },
+        { name: 'Morango 300ml', price: 8 },
+        { name: 'Maracujá 500ml', price: 12 },
+        { name: 'Morango 500ml', price: 12 }
     ]
 };
 
