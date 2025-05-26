@@ -120,6 +120,7 @@ function openOrdersModal() {
     const modal = document.createElement('div');
     modal.id = 'ordersModal';
     modal.className = 'modal-item';
+    modal.style.display = 'flex';
     modal.innerHTML = `
         <div class="modal-content-one">
             <span class="close" onclick="closeModal('ordersModal')">&times;</span>
@@ -130,7 +131,6 @@ function openOrdersModal() {
         </div>
     `;
     document.body.appendChild(modal);
-    modal.style.display = 'block';
 }
 
 // Função para fechar o modal
@@ -201,7 +201,7 @@ function updateOrderSummary() {
     const orderList = document.getElementById('orderList');
     const orderTotalElement = document.getElementById('orderTotal');
     orderList.innerHTML = '';
-    orderTotal = 0;
+    let total = 0;
 
     orderItems.forEach((item, index) => {
         const listItem = document.createElement('li');
@@ -222,17 +222,14 @@ function updateOrderSummary() {
         );
 
         if (extras.length > 0) {
-            // Remove o "1x" dos extras se existir
             const cleanExtras = extras.map(extra => extra.replace(/^\d+x\s*/, ''));
             itemText += ` (Adicionais: ${cleanExtras.join('/')})`;
         }
 
-        // Adiciona observações de forma mais compacta
         if (item.obs) {
             itemText += ` (${item.obs})`;
         }
 
-        // Adiciona o preço
         itemText += ` - R$${(item.price * item.quantity).toFixed(2)}`;
         
         // Criar container para o item e seus controles
@@ -251,13 +248,11 @@ function updateOrderSummary() {
         // Botão de diminuir quantidade
         const decreaseBtn = document.createElement('button');
         decreaseBtn.textContent = '-';
-        decreaseBtn.className = 'btn btn-orange';
         decreaseBtn.onclick = () => updateOrderItemQuantity(index, -1);
         
         // Botão de aumentar quantidade
         const increaseBtn = document.createElement('button');
         increaseBtn.textContent = '+';
-        increaseBtn.className = 'btn btn-orange';
         increaseBtn.onclick = () => updateOrderItemQuantity(index, 1);
         
         // Adicionar botões ao container de controles
@@ -272,10 +267,17 @@ function updateOrderSummary() {
         listItem.appendChild(itemContainer);
         orderList.appendChild(listItem);
         
-        orderTotal += item.price * item.quantity;
+        total += item.price * item.quantity;
     });
 
-    orderTotalElement.textContent = `Total: R$${orderTotal.toFixed(2)}`;
+    // Aplica o desconto
+    const discountInput = document.getElementById('discount');
+    const discount = parseFloat(discountInput.value) || 0;
+    total = Math.max(0, total - discount);
+
+    // Atualiza o total na tela e na variável global
+    orderTotal = total;
+    orderTotalElement.textContent = `Total: R$${total.toFixed(2)}`;
 }
 
 // Função para adicionar uma bebida ao pedido
@@ -831,4 +833,50 @@ function updateEstoqueAfterSale(items) {
     }
     
     saveEstoqueItems(estoqueItems);
+}
+
+function updateTotal() {
+    let total = 0;
+    
+    // Calcula o total dos itens
+    orderItems.forEach(item => {
+        total += item.price * item.quantity;
+    });
+    
+    // Aplica o desconto
+    const discountInput = document.getElementById('discount');
+    const discount = parseFloat(discountInput.value) || 0;
+    
+    // Subtrai o desconto do total
+    total = Math.max(0, total - discount);
+    
+    // Atualiza o total na tela
+    document.getElementById('orderTotal').textContent = `Total: R$${total.toFixed(2)}`;
+    
+    // Atualiza a variável global orderTotal
+    orderTotal = total;
+}
+
+function renderOrderItem(name, price, quantity) {
+    const li = document.createElement('li');
+    li.className = 'order-item';
+    li.dataset.price = price;
+    li.dataset.quantity = quantity;
+    
+    li.innerHTML = `
+        <div class="order-item-info">
+            <span>${name}</span>
+            <span class="order-item-price">R$${(price * quantity).toFixed(2)}</span>
+        </div>
+        <div class="order-item-controls">
+            <div class="order-item-quantity">
+                <button class="btn-quantity" onclick="decreaseQuantity(this)">-</button>
+                <span>${quantity}</span>
+                <button class="btn-quantity" onclick="increaseQuantity(this)">+</button>
+            </div>
+            <button class="btn-remove" onclick="removeItem(this)">×</button>
+        </div>
+    `;
+    
+    return li;
 }
