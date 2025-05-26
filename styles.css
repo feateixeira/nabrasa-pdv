@@ -1,0 +1,10 @@
+#printableOrder p {
+    margin: 5px 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#printableOrder p:last-of-type {
+    margin-top: 10px;
+    font-size: 18px;
+} 

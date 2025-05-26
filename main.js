@@ -525,11 +525,24 @@ function addExtraCharge() {
 
 // Função para imprimir o pedido e salvar no localStorage
 function printOrder() {
-    const addressInput = document.getElementById("address").value.trim();
-    const paymentMethod = document.getElementById("paymentMethod").value || "Não especificado";
-    const paymentObservations = document.getElementById("paymentObservations").value.trim();
-    const obs = document.getElementById("obs").value.trim();
-    const complement = document.getElementById("complement").value.trim();
+    const addressElem = document.getElementById("address");
+    const addressInput = addressElem ? addressElem.value.trim() : "";
+
+    const paymentMethodElem = document.getElementById("paymentMethod");
+    const paymentMethod = paymentMethodElem ? paymentMethodElem.value : "Não especificado";
+
+    const obsElem = document.getElementById("obs");
+    const obs = obsElem ? obsElem.value.trim() : "";
+
+    const complementElem = document.getElementById("complement");
+    const complement = complementElem ? complementElem.value.trim() : "";
+
+    const paymentObservationsElem = document.getElementById("paymentObservations");
+    const paymentObservations = paymentObservationsElem ? paymentObservationsElem.value.trim() : "";
+
+    const discountElem = document.getElementById("discount");
+    const discount = discountElem ? parseFloat(discountElem.value) || 0 : 0;
+    discountElem.value = ""; // Limpa o campo de desconto imediatamente após capturar o valor
 
     if (!addressInput) {
         Swal.fire({
@@ -560,7 +573,8 @@ function printOrder() {
         paymentMethod: paymentMethod,
         paymentObservations: paymentObservations,
         obs: obs,
-        complement: complement
+        complement: complement,
+        discount: discount
     };
 
     // Salva o pedido no localStorage
@@ -573,6 +587,7 @@ function printOrder() {
     const img = "<img src='./assets/Brasa.png'>";
     const complementText = complement ? `(${complement})` : '';
     const paymentObservationsText = paymentObservations ? `${paymentObservations}` : '';
+    const discountText = discount > 0 ? `Desconto: R$${discount.toFixed(2)}` : '';
 
     // Cria uma lista limpa dos itens (sem os botões de controle)
     const cleanOrderList = orderItems.map(item => {
@@ -581,13 +596,13 @@ function printOrder() {
         // Separa molhos e adicionais
         const sauces = item.extras.filter(extra =>
             ['Bacon', 'Mostarda&Mel', 'Alho', 'Ervas', 'Sem Molho'].some(sauce => 
-                extra === sauce // Verifica se é exatamente igual ao molho
+                extra === sauce
             )
         );
 
         const additionals = item.extras.filter(extra =>
             !['Bacon', 'Mostarda&Mel', 'Alho', 'Ervas', 'Sem Molho'].some(sauce => 
-                extra === sauce // Verifica se é exatamente igual ao molho
+                extra === sauce
             )
         );
 
@@ -617,6 +632,7 @@ function printOrder() {
             <h2 class="comp">${complementText}</h2>
             <ul>${cleanOrderList}</ul>
             ${obs ? `<ul>${obs}</ul>` : ''}
+            ${discountText ? `<p>${discountText}</p>` : ''}
             <p>Total: ${document.getElementById("orderTotal").innerText.replace("Total: ", "")} <br> <br> (${paymentMethod})</p>
             ${paymentObservationsText ? `<h5>${paymentObservationsText}</h5>` : ''}
             <h4>OBRIGADO PELA PREFERÊNCIA!</h4>
@@ -739,6 +755,7 @@ function clearOrder() {
     document.getElementById("paymentObservations").value = "";
     document.getElementById("complement").value = "";
     document.getElementById("paymentMethod").value = "Pix";
+    document.getElementById("discount").value = ""; // Limpa o campo de desconto
     
     // Remove o indicador de entrega se existir
     const deliveryIndicator = document.querySelector('.delivery-added');
