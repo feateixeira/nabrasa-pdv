@@ -169,34 +169,40 @@
             <div class="order-summary-container">
                 <div class="order-summary">
                     <h3>Resumo do Pedido</h3>
-                    <ul id="orderList" class="list-unstyled"></ul>
-                    <p id="orderTotal">Total: R$0,00</p>
-                    <div class="form-group">
-                        <label for="address">Nome/End.:</label>
-                        <input type="text" id="address" class="form-control">
+                    <div class="order-items-container">
+                        <ul id="orderList" class="list-unstyled"></ul>
                     </div>
-                    <div class="form-group">
-                        <label for="complement">Complemento:</label>
-                        <input type="text" id="complement" class="form-control">
+                    <div class="order-total-section">
+                        <div class="form-group">
+                            <label for="discount">Desconto (R$):</label>
+                            <input type="number" id="discount" class="form-control" min="0" step="0.01" onchange="updateTotal()">
+                        </div>
+                        <p id="orderTotal">Total: R$0,00</p>
                     </div>
-                    <div class="form-group">
-                        <label for="obs">Obs:</label>
-                        <input type="text" id="obs" class="form-control">
+                    <div class="order-details">
+                        <div class="form-group">
+                            <label for="address">Nome/End.:</label>
+                            <input type="text" id="address" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="obs">Obs:</label>
+                            <input type="text" id="obs" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="payment">Forma de Pagamento:</label>
+                            <select id="paymentMethod" class="form-control">
+                                <option value="Pix">Pix</option>
+                                <option value="Dinheiro">Dinheiro</option>
+                                <option value="Crédito">Cartão de Crédito</option>
+                                <option value="Débito">Cartão de Débito</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="paymentObservations" class="form-control" placeholder="Ex: R$ 50 em espécie e R$ 50 no crédito"></textarea>
+                        </div>
+                        <button class="btn btn-action mt-3" onclick="printOrder()">Imprimir Pedido</button>
+                        <button id="addChargeButton" class="btn btn-action mt-3" onclick="addExtraCharge()">Adicionar Entrega</button>
                     </div>
-                    <div class="form-group">
-                        <label for="payment">Forma de Pagamento:</label>
-                        <select id="paymentMethod" class="form-control">
-                            <option value="Pix">Pix</option>
-                            <option value="Dinheiro">Dinheiro</option>
-                            <option value="Crédito">Cartão de Crédito</option>
-                            <option value="Débito">Cartão de Débito</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <textarea id="paymentObservations" class="form-control" placeholder="Ex: R$ 50 em espécie e R$ 50 no crédito"></textarea>
-                    </div>
-                    <button class="btn btn-action mt-3" onclick="printOrder()">Imprimir Pedido</button>
-                    <button id="addChargeButton" class="btn btn-action mt-3" onclick="addExtraCharge()">Adicionar Entrega</button>
                 </div>
             </div>
         </div>
