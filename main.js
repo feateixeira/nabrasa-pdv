@@ -275,6 +275,11 @@ function updateOrderSummary() {
     const discount = parseFloat(discountInput.value) || 0;
     total = Math.max(0, total - discount);
 
+    // Adiciona a taxa de entrega se existir
+    if (deliveryAdded) {
+        total += 4.00;
+    }
+
     // Atualiza o total na tela e na variável global
     orderTotal = total;
     orderTotalElement.textContent = `Total: R$${total.toFixed(2)}`;
@@ -496,8 +501,14 @@ function displayOrders() {
 
 // Função para adicionar a taxa de entrega
 function addExtraCharge() {
+    // Verifica se já tem entrega adicionada
+    if (deliveryAdded) {
+        return; // Se já tem entrega, não faz nada
+    }
+
     // Adiciona R$ 4,00 ao valor total
-    orderTotal += 4;
+    const entregaValue = 4.00;
+    orderTotal += entregaValue;
 
     // Atualiza o total do pedido
     const orderTotalElement = document.getElementById('orderTotal');
@@ -510,14 +521,24 @@ function addExtraCharge() {
     if (addChargeButton) {
         addChargeButton.disabled = true;
         addChargeButton.textContent = 'Entrega Adicionada';
+        addChargeButton.style.backgroundColor = '#28a745';
     }
 
     // Adiciona indicador visual da entrega
     const orderSummary = document.querySelector('.order-summary');
-    const deliveryIndicator = document.createElement('div');
-    deliveryIndicator.className = 'delivery-added';
-    deliveryIndicator.textContent = 'Taxa de Entrega add: R$4,00';
-    orderSummary.insertBefore(deliveryIndicator, orderTotalElement);
+    if (orderSummary) {
+        const deliveryIndicator = document.createElement('div');
+        deliveryIndicator.className = 'delivery-added';
+        deliveryIndicator.textContent = `Taxa de Entrega add: R$${entregaValue.toFixed(2)}`;
+        
+        // Insere antes do total
+        const orderTotal = orderSummary.querySelector('#orderTotal');
+        if (orderTotal) {
+            orderTotal.parentNode.insertBefore(deliveryIndicator, orderTotal);
+        } else {
+            orderSummary.appendChild(deliveryIndicator);
+        }
+    }
 
     // Marca que a taxa de entrega foi adicionada
     deliveryAdded = true;
@@ -624,6 +645,9 @@ function printOrder() {
         return `<li>${itemText}</li>`;
     }).join('');
 
+    // Calcula o subtotal (total sem a taxa de entrega)
+    const subtotal = deliveryAdded ? orderTotal - 4.00 : orderTotal;
+
     const printableOrder = document.getElementById("printableOrder");
     if (printableOrder) {
         printableOrder.innerHTML = `
@@ -633,7 +657,9 @@ function printOrder() {
             <ul>${cleanOrderList}</ul>
             ${obs ? `<ul>${obs}</ul>` : ''}
             ${discountText ? `<p>${discountText}</p>` : ''}
-            <p>Total: ${document.getElementById("orderTotal").innerText.replace("Total: ", "")} <br> <br> (${paymentMethod})</p>
+            <p>Subtotal: R$${subtotal.toFixed(2)}</p>
+            ${deliveryAdded ? `<p>delivery: R$4,00</p>` : ''}
+            <p>Total: R$${orderTotal.toFixed(2)} <br> <br> (${paymentMethod})</p>
             ${paymentObservationsText ? `<h5>${paymentObservationsText}</h5>` : ''}
             <h4>OBRIGADO PELA PREFERÊNCIA!</h4>
             <div class="img-nabrasa">${img}</div>
@@ -746,16 +772,29 @@ function downloadOrdersXML() {
 function clearOrder() {
     orderItems = [];
     orderTotal = 0;
+    deliveryAdded = false; // Reseta a variável global de entrega
 
     // Limpa os inputs
-    document.getElementById("orderList").innerHTML = "";
-    document.getElementById("orderTotal").innerText = "Total: R$0,00";
-    document.getElementById("address").value = "";
-    document.getElementById("obs").value = "";
-    document.getElementById("paymentObservations").value = "";
-    document.getElementById("complement").value = "";
-    document.getElementById("paymentMethod").value = "Pix";
-    document.getElementById("discount").value = ""; // Limpa o campo de desconto
+    const elements = {
+        orderList: document.getElementById("orderList"),
+        orderTotal: document.getElementById("orderTotal"),
+        address: document.getElementById("address"),
+        obs: document.getElementById("obs"),
+        paymentObservations: document.getElementById("paymentObservations"),
+        complement: document.getElementById("complement"),
+        paymentMethod: document.getElementById("paymentMethod"),
+        discount: document.getElementById("discount")
+    };
+
+    // Limpa cada elemento se ele existir
+    if (elements.orderList) elements.orderList.innerHTML = "";
+    if (elements.orderTotal) elements.orderTotal.innerText = "Total: R$0,00";
+    if (elements.address) elements.address.value = "";
+    if (elements.obs) elements.obs.value = "";
+    if (elements.paymentObservations) elements.paymentObservations.value = "";
+    if (elements.complement) elements.complement.value = "";
+    if (elements.paymentMethod) elements.paymentMethod.value = "Pix";
+    if (elements.discount) elements.discount.value = "";
     
     // Remove o indicador de entrega se existir
     const deliveryIndicator = document.querySelector('.delivery-added');
@@ -763,11 +802,21 @@ function clearOrder() {
         deliveryIndicator.remove();
     }
     
-    // Reseta o botão de entrega
+    // Reseta o botão de entrega completamente
     const addChargeButton = document.getElementById("addChargeButton");
     if (addChargeButton) {
+        // Reseta completamente o botão
         addChargeButton.disabled = false;
         addChargeButton.textContent = 'Adicionar Entrega';
+        addChargeButton.style.backgroundColor = '#ff8c42';
+        addChargeButton.style.color = 'white';
+        addChargeButton.style.borderColor = '#ff8c42';
+        addChargeButton.style.cursor = 'pointer';
+        
+        // Remove todos os event listeners e adiciona um novo
+        const newButton = addChargeButton.cloneNode(true);
+        addChargeButton.parentNode.replaceChild(newButton, addChargeButton);
+        newButton.addEventListener('click', addExtraCharge);
     }
 
     // Atualiza o resumo do pedido

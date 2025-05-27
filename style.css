@@ -204,6 +204,18 @@ nav a {
     cursor: not-allowed;
 }
 
+#addChargeButton.selected {
+    background-color: #28a745;
+    color: white;
+    border-color: #218838;
+}
+
+#addChargeButton:not(.selected) {
+    background-color: #ff8c42;
+    color: white;
+    border-color: #ff8c42;
+}
+
 /* Botões de ação */
 .btn-action {
     padding: 8px;
