@@ -5,6 +5,8 @@ let selectedBurgerButton = null;
 let deliveryAdded = false;
 let orderTotal = 0;
 let tempBurger = null; // Armazena o hambúrguer temporariamente
+let currentOrderNumber = 1; // Variável para controlar o número do pedido
+let currentDeliveryNumber = 1; // Variável para controlar o número de entregas
 
 // Dados das bebidas
 const drinks = {
@@ -499,6 +501,13 @@ function displayOrders() {
     });
 }
 
+// Função para obter o próximo número de entrega
+function getNextDeliveryNumber() {
+    const number = currentDeliveryNumber;
+    currentDeliveryNumber++;
+    return number.toString().padStart(2, '0'); // Garante que sempre tenha 2 dígitos
+}
+
 // Função para adicionar a taxa de entrega
 function addExtraCharge() {
     // Verifica se já tem entrega adicionada
@@ -544,6 +553,13 @@ function addExtraCharge() {
     deliveryAdded = true;
 }
 
+// Função para obter o próximo número do pedido
+function getNextOrderNumber() {
+    const number = currentOrderNumber;
+    currentOrderNumber++;
+    return number.toString().padStart(2, '0'); // Garante que sempre tenha 2 dígitos
+}
+
 // Função para imprimir o pedido e salvar no localStorage
 function printOrder() {
     const addressElem = document.getElementById("address");
@@ -583,9 +599,11 @@ function printOrder() {
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString("pt-BR");
     const formattedTime = currentDate.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' });
+    const orderNumber = getNextOrderNumber(); // Obtém o próximo número do pedido
 
     // Cria o objeto do pedido
     const order = {
+        orderNumber: orderNumber, // Adiciona o número do pedido
         date: formattedDate,
         time: formattedTime,
         items: orderItems,
@@ -597,6 +615,11 @@ function printOrder() {
         complement: complement,
         discount: discount
     };
+
+    // Adiciona o número de entrega se houver entrega
+    if (deliveryAdded) {
+        order.deliveryNumber = getNextDeliveryNumber();
+    }
 
     // Salva o pedido no localStorage
     saveOrderToLocalStorage(order);
@@ -651,7 +674,7 @@ function printOrder() {
     const printableOrder = document.getElementById("printableOrder");
     if (printableOrder) {
         printableOrder.innerHTML = `
-            <h3>${formattedDate} - ${formattedTime}</h3>
+            <h3>pedido #${orderNumber} - ${formattedDate} - ${formattedTime}</h3>
             <h2>${addressInput}</h2>
             <h2 class="comp">${complementText}</h2>
             <ul>${cleanOrderList}</ul>
@@ -661,6 +684,7 @@ function printOrder() {
             ${deliveryAdded ? `<p>delivery: R$4,00</p>` : ''}
             <p>Total: R$${orderTotal.toFixed(2)} <br> <br> (${paymentMethod})</p>
             ${paymentObservationsText ? `<h5>${paymentObservationsText}</h5>` : ''}
+            ${deliveryAdded ? `<h4>ENTREGA N${order.deliveryNumber}</h4>` : ''}
             <h4>OBRIGADO PELA PREFERÊNCIA!</h4>
             <div class="img-nabrasa">${img}</div>
         `;
@@ -691,20 +715,51 @@ function checkAndClearOldOrders() {
 
     // Verifica se é 23:10:00
     if (currentHour === 23 && currentMinute === 10 && currentSecond === 0) {
-        // Faz o download do XML antes de limpar
-        downloadOrdersXML();
+        // Verifica se existem pedidos para salvar
+        const savedOrders = JSON.parse(localStorage.getItem('orders')) || [];
         
-        // Limpa os pedidos do localStorage
-        localStorage.removeItem('orders');
-        
-        // Notifica o usuário
-        Swal.fire({
-            icon: 'info',
-            title: 'Pedidos do dia salvos',
-            text: 'Os pedidos do dia foram salvos em XML e o sistema foi limpo para o próximo dia.',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#ff8c42',
-        });
+        if (savedOrders.length > 0) {
+            // Faz o download do XML antes de limpar
+            downloadOrdersXML().then(() => {
+                // Limpa os pedidos do localStorage
+                localStorage.removeItem('orders');
+                // Reseta os números dos pedidos
+                currentOrderNumber = 1;
+                currentDeliveryNumber = 1;
+                
+                // Notifica o usuário
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Fechamento de Caixa Realizado',
+                    text: 'Os pedidos do dia foram salvos em XML e o sistema foi limpo para o próximo dia.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#ff8c42',
+                });
+            }).catch(error => {
+                console.error('Erro ao fazer download do XML:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro no Fechamento',
+                    text: 'Ocorreu um erro ao salvar os pedidos. Por favor, tente novamente.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#ff8c42',
+                });
+            });
+        } else {
+            // Se não houver pedidos, apenas limpa o localStorage e reseta os números
+            localStorage.removeItem('orders');
+            currentOrderNumber = 1;
+            currentDeliveryNumber = 1;
+            
+            // Notifica o usuário
+            Swal.fire({
+                icon: 'info',
+                title: 'Fechamento de Caixa',
+                text: 'Não havia pedidos para salvar. O sistema foi limpo para o próximo dia.',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#ff8c42',
+            });
+        }
     }
 }
 
@@ -716,56 +771,65 @@ function startOrderCleanupCheck() {
 
 // Função para baixar os pedidos em formato XML
 function downloadOrdersXML() {
-    const savedOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    return new Promise((resolve, reject) => {
+        try {
+            const savedOrders = JSON.parse(localStorage.getItem('orders')) || [];
+            const currentDate = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
 
-    // Cria o conteúdo XML
-    const xmlString = `
-        <pedidos>
-            ${savedOrders.map(order => `
-                <pedido>
-                    <data>${order.date} ${order.time}</data>
-                    <endereco>${order.address}</endereco>
-                    <complemento>${order.complement}</complemento>
-                    <metodoPagamento>${order.paymentMethod}</metodoPagamento>
-                    <observacoes>${order.obs}</observacoes>
-                    <itens>
-                        ${order.items.map(item => `
-                            <item>
-                                <nome>${item.name}</nome>
-                                <quantidade>${item.quantity}</quantidade>
-                                <preco>${item.price.toFixed(2)}</preco>
-                            </item>
-                        `).join('')}
-                    </itens>
-                    <total>${order.total.toFixed(2)}</total>
-                </pedido>
-            `).join('')}
-        </pedidos>
-    `;
+            // Cria o conteúdo XML
+            const xmlString = `
+                <pedidos data="${currentDate}">
+                    ${savedOrders.map(order => `
+                        <pedido>
+                            <data>${order.date} ${order.time}</data>
+                            <endereco>${order.address}</endereco>
+                            <complemento>${order.complement}</complemento>
+                            <metodoPagamento>${order.paymentMethod}</metodoPagamento>
+                            <observacoes>${order.obs}</observacoes>
+                            <itens>
+                                ${order.items.map(item => `
+                                    <item>
+                                        <nome>${item.name}</nome>
+                                        <quantidade>${item.quantity}</quantidade>
+                                        <preco>${item.price.toFixed(2)}</preco>
+                                    </item>
+                                `).join('')}
+                            </itens>
+                            <total>${order.total.toFixed(2)}</total>
+                        </pedido>
+                    `).join('')}
+                </pedidos>
+            `;
 
-    // Cria um Blob com o conteúdo XML
-    const blob = new Blob([xmlString], { type: 'application/xml' });
-    const url = URL.createObjectURL(blob);
+            // Cria um Blob com o conteúdo XML
+            const blob = new Blob([xmlString], { type: 'application/xml' });
+            const url = URL.createObjectURL(blob);
 
-    // Usa o IPC do Electron para download
-    if (window.require) {
-        const { ipcRenderer } = window.require('electron');
-        ipcRenderer.send('download-file', {
-            url: url,
-            filename: 'pedidos_do_dia.xml'
-        });
-    } else {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'pedidos_do_dia.xml';
-        a.click();
-    }
+            // Usa o IPC do Electron para download
+            if (window.require) {
+                const { ipcRenderer } = window.require('electron');
+                ipcRenderer.send('download-file', {
+                    url: url,
+                    filename: `pedidos_${currentDate}.xml`
+                });
+                resolve();
+            } else {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `pedidos_${currentDate}.xml`;
+                a.click();
+                resolve();
+            }
 
-    // Libera o objeto URL
-    URL.revokeObjectURL(url);
+            // Libera o objeto URL
+            URL.revokeObjectURL(url);
 
-    // Fecha o modal após o download
-    closeModal('ordersModal');
+            // Fecha o modal após o download
+            closeModal('ordersModal');
+        } catch (error) {
+            reject(error);
+        }
+    });
 }
 
 // Função para limpar o pedido e os inputs
