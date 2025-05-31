@@ -117,8 +117,76 @@ function clearAdditionalItems() {
     }
 }
 
+// Função para calcular estatísticas dos pedidos
+function calculateOrderStats() {
+    const savedOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    const stats = {
+        totalVendas: savedOrders.length,
+        totalEntregas: 0,
+        totalValor: 0,
+        itensVendidos: {},
+        metodosPagamento: {},
+        horariosPico: {}
+    };
+
+    savedOrders.forEach(order => {
+        // Conta entregas
+        if (order.deliveryNumber) {
+            stats.totalEntregas++;
+        }
+
+        // Soma valor total
+        stats.totalValor += order.total;
+
+        // Conta métodos de pagamento
+        stats.metodosPagamento[order.paymentMethod] = (stats.metodosPagamento[order.paymentMethod] || 0) + 1;
+
+        // Conta horários (por hora)
+        const hora = order.time.split(':')[0];
+        stats.horariosPico[hora] = (stats.horariosPico[hora] || 0) + 1;
+
+        // Conta itens vendidos
+        order.items.forEach(item => {
+            const itemName = item.name;
+            if (!stats.itensVendidos[itemName]) {
+                stats.itensVendidos[itemName] = {
+                    quantidade: 0,
+                    valor: 0
+                };
+            }
+            stats.itensVendidos[itemName].quantidade += item.quantity;
+            stats.itensVendidos[itemName].valor += item.price * item.quantity;
+        });
+    });
+
+    // Ordena itens por quantidade vendida
+    const itensOrdenados = Object.entries(stats.itensVendidos)
+        .sort(([, a], [, b]) => b.quantidade - a.quantidade)
+        .slice(0, 5); // Top 5 itens
+
+    // Encontra horário de pico
+    const horarioPico = Object.entries(stats.horariosPico)
+        .sort(([, a], [, b]) => b - a)[0];
+
+    return {
+        ...stats,
+        itensMaisVendidos: itensOrdenados,
+        horarioPico: horarioPico ? `${horarioPico[0]}h (${horarioPico[1]} pedidos)` : 'N/A'
+    };
+}
+
+// Função para formatar valor em reais
+function formatCurrency(value) {
+    return value.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    });
+}
+
 // Função para abrir o modal de pedidos
 function openOrdersModal() {
+    const stats = calculateOrderStats();
+    
     const modal = document.createElement('div');
     modal.id = 'ordersModal';
     modal.className = 'modal-item';
@@ -127,12 +195,278 @@ function openOrdersModal() {
         <div class="modal-content-one">
             <span class="close" onclick="closeModal('ordersModal')">&times;</span>
             <h2>Fechamento de Caixa</h2>
+            
+            <div class="stats-container">
+                <div class="stats-section">
+                    <h3>Resumo do Dia</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Total de Vendas:</span>
+                            <span class="stat-value">${stats.totalVendas}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total de Entregas:</span>
+                            <span class="stat-value">${stats.totalEntregas}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Valor Total:</span>
+                            <span class="stat-value">${formatCurrency(stats.totalValor)}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Horário de Pico:</span>
+                            <span class="stat-value">${stats.horarioPico}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-section">
+                        <h3>Vendas por Horário</h3>
+                        <canvas id="salesByHourChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-section">
+                        <h3>Métodos de Pagamento</h3>
+                        <canvas id="paymentMethodsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="stats-section">
+                    <h3>Top 5 Itens Mais Vendidos</h3>
+                    <div class="top-items-list">
+                        ${stats.itensMaisVendidos.map(([item, data], index) => `
+                            <div class="top-item">
+                                <span class="item-rank">${index + 1}º</span>
+                                <span class="item-name">${item}</span>
+                                <span class="item-quantity">${data.quantidade}x</span>
+                                <span class="item-value">${formatCurrency(data.valor)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="stats-section">
+                    <h3>Métodos de Pagamento</h3>
+                    <div class="payment-methods">
+                        ${Object.entries(stats.metodosPagamento).map(([method, count]) => `
+                            <div class="payment-method">
+                                <span class="method-name">${method}</span>
+                                <span class="method-count">${count}x</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+
             <div class="modal-buttons">
                 <button class="btn btn-action download" onclick="downloadOrdersXML()">Baixar XML do Dia</button>
             </div>
         </div>
     `;
     document.body.appendChild(modal);
+
+    // Adiciona estilos CSS dinamicamente
+    const style = document.createElement('style');
+    style.textContent = `
+        .stats-container {
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .stats-section {
+            margin-bottom: 30px;
+        }
+
+        .stats-section h3 {
+            color: #ff8c42;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            color: #333;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .chart-section {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chart-section h3 {
+            color: #ff8c42;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .top-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .top-item {
+            display: grid;
+            grid-template-columns: 40px 1fr auto auto;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .item-rank {
+            color: #ff8c42;
+            font-weight: bold;
+        }
+
+        .item-name {
+            color: #333;
+        }
+
+        .item-quantity {
+            color: #666;
+            margin: 0 10px;
+        }
+
+        .item-value {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .payment-method {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .method-name {
+            color: #333;
+        }
+
+        .method-count {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .modal-content-one {
+            max-width: 1000px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Adiciona o script do Chart.js
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+    script.onload = () => {
+        // Gráfico de vendas por horário
+        const salesByHourCtx = document.getElementById('salesByHourChart').getContext('2d');
+        const salesByHourData = Object.entries(stats.horariosPico).sort(([a], [b]) => a - b);
+        
+        new Chart(salesByHourCtx, {
+            type: 'bar',
+            data: {
+                labels: salesByHourData.map(([hour]) => `${hour}h`),
+                datasets: [{
+                    label: 'Número de Pedidos',
+                    data: salesByHourData.map(([, count]) => count),
+                    backgroundColor: '#ff8c42',
+                    borderColor: '#ff8c42',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gráfico de métodos de pagamento
+        const paymentMethodsCtx = document.getElementById('paymentMethodsChart').getContext('2d');
+        const paymentMethodsData = Object.entries(stats.metodosPagamento);
+        
+        new Chart(paymentMethodsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: paymentMethodsData.map(([method]) => method),
+                datasets: [{
+                    data: paymentMethodsData.map(([, count]) => count),
+                    backgroundColor: [
+                        '#ff8c42',
+                        '#28a745',
+                        '#17a2b8',
+                        '#6c757d',
+                        '#dc3545'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    };
+    document.head.appendChild(script);
 }
 
 // Função para fechar o modal
