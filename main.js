@@ -52,6 +52,10 @@ const drinks = {
         { name: 'Morango 300ml', price: 8 },
         { name: 'Maracujá 500ml', price: 12 },
         { name: 'Morango 500ml', price: 12 }
+    ],
+    sucokids: [
+        { name: 'SucoKids Uva 200ml', price: 5 },
+        { name: 'SucoKids Maracujá 200ml', price: 5 }
     ]
 };
 

@@ -19,7 +19,9 @@ const initialEstoqueData = [
     { name: 'Coca-Cola 600ml', quantity: 80, minStock: 15, value: 5.00 },
     { name: 'Coca-Cola 2L', quantity: 50, minStock: 10, value: 8.00 },
     { name: 'Guaraná Lata', quantity: 100, minStock: 20, value: 3.50 },
-    { name: 'Água 500ml', quantity: 120, minStock: 24, value: 2.00 }
+    { name: 'Água 500ml', quantity: 120, minStock: 24, value: 2.00 },
+    { name: 'SucoKids Uva 200ml', quantity: 50, minStock: 10, value: 3.50 },
+    { name: 'SucoKids Maracujá 200ml', quantity: 50, minStock: 10, value: 3.50 }
 ];
 
 // Inicializa o estoque se ainda não existir

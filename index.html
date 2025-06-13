@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./print.css" media="print">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/Brasa.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/fire.png">
 </head>
 <body>
     <script src="users.js"></script>
@@ -17,7 +17,7 @@
     <div id="loginOverlay" class="login-overlay">
         <div class="login-container">
             <div class="login-logo">
-                <img src="assets/Brasa.png" alt="Logo Na Brasa">
+                <img src="assets/logo100.png" alt="Logo Na Brasa">
             </div>
             <form id="loginForm" onsubmit="return handleLogin(event)">
                 <div class="form-group">
@@ -37,7 +37,7 @@
     <div id="mainContent" class="main-content">
         <header>
             <div class="logo">
-                <img src="assets/Brasa.png" alt="Logo">
+                <img src="assets/logo100.png" alt="Logo">
             </div>
             <nav>
                 <a href="estoque.html">Estoque</a>
@@ -54,9 +54,9 @@
                     <h3>Hambúrgueres:</h3>
                     <div class="menu-buttons">
                         <!-- Botões dos hambúrgueres -->
-                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Simples', 14, this)">Na brasa Simples - R$14,00</button>
-                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Duplo', 22, this)">Na brasa Duplo - R$22,00</button>
-                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Triplo', 28, this)">Na brasa Triplo - R$28,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Simples', 14, this)">Na brasa Simples - R$15,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Duplo', 22, this)">Na brasa Duplo - R$23,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Triplo', 28, this)">Na brasa Triplo - R$30,00</button>
                         <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Simples Especial', 20, this)">Hambúrguer Simples ESPECIAL - R$20,00</button>
                         <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Duplo Especial', 27, this)">Hambúrguer Duplo ESPECIAL - R$27,00</button>
                         <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Triplo Especial', 32, this)">Hambúrguer Triplo ESPECIAL - R$32,00</button>
@@ -66,6 +66,7 @@
                         <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Frango Simples', 20, this)">Hambúrguer Frango Simples - R$20,00</button>
                         <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Frango Duplo', 27, this)">Hambúrguer Frango Duplo - R$27,00</button>
                         <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Frango Triplo', 32, this)">Hambúrguer Frango Triplo - R$32,00</button>
+                        <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Kids', 13, this)">Hambúrguer Na Brasa Kids - R$13,00</button>
                         <!-- Hambúrgueres que não acionam o modal -->
                         <button class="btn btn-orange" onclick="addBurgerToOrder('Na Brasa Nuttela', 16, this)">Hambúrguer Nuttela + Morango - R$16,00</button>
                         
@@ -79,10 +80,12 @@
                         <div class="menu-buttons">
                             <button class="btn btn-orange" onclick="addItemToOrder('Batata Frita(COMBO)', 5)">Batata Combo - R$5,00</button>
                             <button class="btn btn-orange" onclick="addItemToOrder('Batata Frita Pequena', 8)">Batata Pequena - R$8,00</button>
-                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Média', 15)">Batata Média - R$15,00</button>
-                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Média Recheada', 20)">Batata Média Recheada - R$20,00</button>
-                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Grande', 20)">Batata Grande - R$20,00</button>
-                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Grande Recheada', 28)">Batata Grande Recheada - R$28,00</button>
+                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Média', 15)">Batata Média - R$16,00</button>
+                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Média Recheada', 20)">Batata Média Recheada - R$21,00</button>
+                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Grande', 20)">Batata Grande - R$22,00</button>
+                            <button class="btn btn-orange" onclick="addItemToOrder('Batata Grande Recheada', 28)">Batata Grande Recheada - R$30,00</button>
+                            <button class="btn btn-orange" onclick="addItemToOrder('Fritas Na Brasa Media', 25)">Fritas Na Brasa Média - R$25,00</button>
+                            <button class="btn btn-orange" onclick="addItemToOrder('Fritas Na Brasa Grande', 37)">Batata Grande Recheada - R$37,00</button>
                         </div>
                     </div>
               
@@ -98,6 +101,7 @@
                         <button class="btn btn-orange" onclick="openDrinksModal('agua')">Água</button>
                         <button class="btn btn-orange" onclick="openDrinksModal('suco')">Suco</button>
                         <button class="btn btn-orange" onclick="openDrinksModal('creme')">Creme</button>
+                        <button class="btn btn-orange" onclick="openDrinksModal('sucokids')">SucoKids</button>
                     </div>
                 </div>
 
