@@ -38,20 +38,20 @@ const drinks = {
         { name: 'Água sem gás', price: 2.5 }
     ],
     suco: [
-        { name: 'Maracujá 300ml', price: 7 },
-        { name: 'Acerola 300ml', price: 7 },
-        { name: 'Abacaxi c/ Hortelã 300ml', price: 7 },
-        { name: 'Morango 300ml', price: 7 },
-        { name: 'Maracujá 500ml', price: 10 },
-        { name: 'Acerola 500ml', price: 10 },
-        { name: 'Abacaxi c/ Hortelã 500ml', price: 10 },
-        { name: 'Morango 500ml', price: 10 }
+        { name: 'Suco de Maracujá 300ml', price: 7 },
+        { name: 'Suco de Acerola 300ml', price: 7 },
+        { name: 'Suco de Abacaxi c/ Hortelã 300ml', price: 7 },
+        { name: 'Suco de Morango 300ml', price: 7 },
+        { name: 'Suco de Maracujá 500ml', price: 10 },
+        { name: 'Suco de Acerola 500ml', price: 10 },
+        { name: 'Suco de Abacaxi c/ Hortelã 500ml', price: 10 },
+        { name: 'Suco de Morango 500ml', price: 10 }
     ],
     creme: [
-        { name: 'Maracujá 300ml', price: 8 },
-        { name: 'Morango 300ml', price: 8 },
-        { name: 'Maracujá 500ml', price: 12 },
-        { name: 'Morango 500ml', price: 12 }
+        { name: 'Creme de Maracujá 300ml', price: 8 },
+        { name: 'Creme de Morango 300ml', price: 8 },
+        { name: 'Creme de Maracujá 500ml', price: 12 },
+        { name: 'Creme de Morango 500ml', price: 12 }
     ],
     sucokids: [
         { name: 'SucoKids Uva 200ml', price: 5 },
@@ -966,7 +966,7 @@ function printOrder() {
     updateEstoqueAfterSale(orderItems);
 
     // Gera o conteúdo para impressão
-    const img = "<img src='./assets/Brasa.png'>";
+    const img = "<img src='./assets/logo.png'>";
     const complementText = complement ? `(${complement})` : '';
     const paymentObservationsText = paymentObservations ? `${paymentObservations}` : '';
     const discountText = discount > 0 ? `Desconto: R$${discount.toFixed(2)}` : '';
